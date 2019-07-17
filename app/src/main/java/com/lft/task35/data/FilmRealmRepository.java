@@ -121,6 +121,7 @@ public class FilmRealmRepository implements IFilmRepository {
             count = filmTreeSet.size();
         for(int i = 0; i<count; i++){
             topFilms.add((Film) filmTreeSet.toArray()[i]);
+            Log.d("DEBUG", "getTopFilms: " + filmTreeSet.toArray()[i]);
         }
         return  topFilms;
     }

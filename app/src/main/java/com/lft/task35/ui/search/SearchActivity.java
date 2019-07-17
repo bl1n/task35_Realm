@@ -23,6 +23,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.realm.internal.Util;
 
 public class SearchActivity extends AppCompatActivity {
 
@@ -71,14 +72,20 @@ public class SearchActivity extends AppCompatActivity {
                     search = mRepository.searchInBounds(
                             Integer.parseInt(etSearchByYearStartYear.getText().toString()),
                             Integer.parseInt(etSearchByYearEndYear.getText().toString()));
-                    Log.d("DEBUG", "onViewClicked: " + search.size());
                 }
                 break;
             case R.id.btn_search_by_director:
+                if(Utils.isCheckedFields(etSearchByDirector)){
+                    search = mRepository.searchByDirector(etSearchByDirector.getText().toString());
+                }
                 break;
             case R.id.btn_search_top_films:
+                if(Utils.isCheckedFields(etSearchTopFilms)){
+                    search = mRepository.getTopFilms(Integer.parseInt(etSearchTopFilms.getText().toString()));
+                }
                 break;
         }
+        Log.d("DEBUG", "onViewClicked: " + search.size());
         for (Film f : search)
             longs.add(f.getId());
         Intent intent = new Intent(this, FilmsActivity.class);
