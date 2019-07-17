@@ -1,3 +1,21 @@
 <resources>
     <string name="app_name">task35</string>
+    <string name="add_new">Add new</string>
+    <string name="default_list">Generate default list</string>
+    <string name="search">Search</string>
+    <string name="list">List</string>
+    <string name="name">Name</string>
+    <string name="year">Year</string>
+    <string name="director">Director</string>
+    <string name="rating">Rating</string>
+    <string name="id">ID</string>
+    <string name="update">Update</string>
+    <string name="search_by_name">Search by name</string>
+    <string name="search_by_year">Search by year</string>
+    <string name="input_film_name">Film name</string>
+    <string name="start_year">Start</string>
+    <string name="end_year">End</string>
+    <string name="search_by_director">Search by director</string>
+    <string name="top_films">Top films</string>
+    <string name="count">Count</string>
 </resources>

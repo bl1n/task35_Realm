@@ -1,5 +1,8 @@
 package com.lft.task35.data.model;
 
+import java.io.Serializable;
+import java.util.Objects;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -15,6 +18,9 @@ public class Film extends RealmObject {
 
     private Double rating;
 
+
+
+
     public long getId() {
         return id;
     }
@@ -22,6 +28,8 @@ public class Film extends RealmObject {
     public void setId(long id) {
         this.id = id;
     }
+
+
 
     public String getName() {
         return name;
@@ -56,6 +64,23 @@ public class Film extends RealmObject {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Film film = (Film) o;
+        return id == film.id &&
+                year == film.year &&
+                Objects.equals(name, film.name) &&
+                Objects.equals(director, film.director) &&
+                Objects.equals(rating, film.rating);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, year, director, rating);
+    }
+
+    @Override
     public String toString() {
         return "Film{" +
                 "id=" + id +
@@ -65,5 +90,6 @@ public class Film extends RealmObject {
                 ", rating=" + rating +
                 '}';
     }
+
 
 }

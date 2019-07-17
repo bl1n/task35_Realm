@@ -1,10 +1,15 @@
 package com.lft.task35.data;
 
+import android.util.Log;
+
 import com.lft.task35.data.model.Film;
+import com.lft.task35.utils.FilmComparatorByRating;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicLong;
 
 import io.realm.Realm;
@@ -75,7 +80,7 @@ public class FilmRealmRepository implements IFilmRepository {
         List<Film> foundFilms = new ArrayList<>();
         List<Film> filmsInRealm = getAll();
         for(Film film :filmsInRealm){
-            if(film.getName().contains(query)){
+            if(film.getName().toLowerCase().contains(query.toLowerCase())){
                 foundFilms.add(film);
             }
         }
@@ -87,7 +92,7 @@ public class FilmRealmRepository implements IFilmRepository {
         List<Film> foundFilms = new ArrayList<>();
         List<Film> filmsInRealm = getAll();
         for(Film film :filmsInRealm){
-            if(film.getYear()>startYear && film.getYear()<endYear){
+            if(film.getYear()>= startYear && film.getYear() <=endYear){
                 foundFilms.add(film);
             }
         }
@@ -99,7 +104,7 @@ public class FilmRealmRepository implements IFilmRepository {
         List<Film> foundFilms = new ArrayList<>();
         List<Film> filmsInRealm = getAll();
         for(Film film :filmsInRealm){
-            if(film.getDirector().contains(name)){
+            if(film.getDirector().toLowerCase().contains(name.toLowerCase())){
                 foundFilms.add(film);
             }
         }
@@ -108,9 +113,51 @@ public class FilmRealmRepository implements IFilmRepository {
 
     @Override
     public List<Film> getTopFilms(int count) {
-        List<Film> foundFilms = new ArrayList<>();
-        List<Film> filmsInRealm = getAll();
-        // TODO: 15.07.2019 add compare methods 
-        return foundFilms;
+        Comparator<Film> filmComparator = new FilmComparatorByRating();
+        TreeSet<Film> filmTreeSet = new TreeSet<>(filmComparator);
+        filmTreeSet.addAll(getAll());
+        List<Film> topFilms = new ArrayList<>();
+        if(count>filmTreeSet.size())
+            count = filmTreeSet.size();
+        for(int i = 0; i<count; i++){
+            topFilms.add((Film) filmTreeSet.toArray()[i]);
+        }
+        return  topFilms;
     }
+
+    public long createAndInsertFilmFrom(String name, String director, int year, double rating){
+        Film film = new Film();
+        film.setName(name);
+        film.setDirector(director);
+        film.setYear(year);
+        film.setRating(rating);
+        return insertItem(film);
+    }
+
+    public boolean seedDB(){
+        try{
+            final List<Film> all = getAll();
+            for(Film f:all)
+                deleteItem(f.getId());
+            createAndInsertFilmFrom("Зеленая миля", "Дарабонт", 1999, 9.13);
+            createAndInsertFilmFrom("Форрест Гамп", "Земекис", 1994, 9.013);
+            createAndInsertFilmFrom("Список Шиндлера", "Спилберг", 1993, 8.88);
+            createAndInsertFilmFrom("Начало", "Нолан", 2010, 8.77);
+            createAndInsertFilmFrom("1+1", "Накаш", 2011, 8.83);
+            createAndInsertFilmFrom("Побег из Шоушенка", "Дарабонт", 1994, 9.19);
+            createAndInsertFilmFrom("Иван Васильевич меняет профессию", "Гайдай", 1973, 8.71);
+            createAndInsertFilmFrom("Жизнь прекрасна", "Бениньи", 1997, 8.67);
+            createAndInsertFilmFrom("Леон", "Бессон", 1994, 8.77);
+            createAndInsertFilmFrom("Король лев", "Аллерс", 1994, 8.76);
+            createAndInsertFilmFrom("Достучаться до небес", "Ян", 1997, 8.66);
+            return true;
+        } catch (Exception e){
+            Log.e("Debug", "seedDB: ", e);
+            return false;
+        }
+
+
+    }
+
+
 }
