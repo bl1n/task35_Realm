@@ -18,7 +18,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.update_film.UpdateFilmActivity" />
+        <activity android:name=".ui.update_film.UpdateDeleteFilmActivity" />
         <activity android:name=".ui.list.FilmsActivity" />
         <activity android:name=".ui.add_new.AddNewActivity" />
     </application>

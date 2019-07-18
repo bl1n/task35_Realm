@@ -11,6 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FilmsViewModel extends ViewModel {
+    private static final String ALL_FILMS = "ALL_FILMS";
+    private static final String SEARCH_BY_NAME = "SEARCH_BY_NAME";
+    private static final String SEARCH_BY_DIRECTOR = "SEARCH_BY_DIRECTOR";
+    private static final String SEARCH_BY_YEARS = "SEARCH_BY_YEARS";
+    private static final String SEARCH_TOP_FILMS = "SEARCH_TOP_FILMS";
 
     private IFilmRepository mRepository;
 
@@ -20,15 +25,50 @@ public class FilmsViewModel extends ViewModel {
         mRepository = repository;
     }
 
-    public MutableLiveData<List<Film>> getData(@Nullable List<Long> ids) {
-        if (ids != null && ids.size() > 0) {
+    public MutableLiveData<List<Film>> getData(String method, String query) {
+
+        switch (method){
+            case ALL_FILMS:{
+                mData.postValue(mRepository.getAll());
+                break;
+            }
+            case SEARCH_BY_NAME:{
+                mData.postValue(mRepository.search(query));
+                break;
+            }
+            case SEARCH_BY_DIRECTOR:{
+                mData.postValue(mRepository.searchByDirector(query));
+                break;
+            }
+            case SEARCH_BY_YEARS:{
+                String[] years = query.split("/");
+                mData.postValue(mRepository.searchInBounds(Integer.parseInt(years[0]),Integer.parseInt(years[1])));
+                break;
+            }
+            case SEARCH_TOP_FILMS:{
+                mData.postValue(mRepository.getTopFilms(Integer.parseInt(query)));
+                break;
+            }
+        }
+
+        return mData;
+
+
+/*
+        if(ids == null){
+            mData.postValue(mRepository.getAll());
+        } else if(ids != null && ids.size() == 0){
+            mData.postValue(new ArrayList<>());
+        } else if(ids != null && ids.size()>0){
             List<Film> films = new ArrayList<>();
-            for(long i:ids){
+            for (long i : ids) {
                 films.add(mRepository.getItem(i));
             }
             mData.postValue(films);
-        } else
-            mData.postValue(mRepository.getAll());
-        return mData;
+        }
+        return mData;*/
+
+
+
     }
 }

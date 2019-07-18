@@ -8,16 +8,16 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.lft.task35.R;
 import com.lft.task35.data.FilmRealmRepository;
-import com.lft.task35.data.model.Film;
 import com.lft.task35.utils.CustomViewModelFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -26,20 +26,26 @@ import butterknife.Unbinder;
 
 public class FilmsFragment extends Fragment {
 
+    public static final String METHOD = "METHOD";
+    public static final String QUERY = "QUERY";
+    private static final String ALL_FILMS = "ALL_FILMS";
+
+
 
     @BindView(R.id.recycler)
     RecyclerView mRecycler;
 
     Unbinder unbinder;
+    @BindView(R.id.tv_mock)
+    TextView tvMock;
 
     private FilmsViewModel mViewModel;
     private FilmsAdapter mAdapter;
     private OnItemClickListener mListener;
-    private List<Long> mIDS;
 
-    public static FilmsFragment newInstance(Bundle args) {
+    public static FilmsFragment newInstance(Bundle bundle) {
         FilmsFragment fragment = new FilmsFragment();
-        fragment.setArguments(args);
+        fragment.setArguments(bundle);
         return fragment;
     }
 
@@ -49,9 +55,9 @@ public class FilmsFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if(context instanceof OnItemClickListener){
+        if (context instanceof OnItemClickListener) {
             mListener = (OnItemClickListener) context;
-        }else {
+        } else {
             throw new RuntimeException(context.toString() + " must implement OnItemClickListener");
         }
     }
@@ -76,15 +82,32 @@ public class FilmsFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mAdapter = new FilmsAdapter(mListener);
-        if(getArguments()!=null){
-            final Bundle arguments = getArguments();
-            mIDS = (List<Long>) arguments.getSerializable("IDS");
+        String method, query;
+        if (getArguments() != null) {
+            final Bundle bundle = getArguments();
+            method = bundle.getString(METHOD);
+            query = bundle.getString(QUERY);
+        } else {
+            method = ALL_FILMS;
+            query = "";
         }
-        else
-            mIDS = new ArrayList<>();
-        mViewModel.getData(mIDS).observe(this, films-> mAdapter.addData(films));
+
+
+        mViewModel.getData(method,query).observe(this, films -> {
+//            if (films != null && films.size() == 0) {
+//                initEmptyUi();
+//                Log.d("Debug", "onActivityCreated: null list ");
+//            }
+
+            mAdapter.addData(films);
+        });
         mRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecycler.setAdapter(mAdapter);
+    }
+
+    private void initEmptyUi() {
+        tvMock.setVisibility(View.VISIBLE);
+        mRecycler.setVisibility(View.GONE);
     }
 
     @Override
@@ -93,7 +116,7 @@ public class FilmsFragment extends Fragment {
         unbinder.unbind();
     }
 
-    public interface OnItemClickListener{
+    public interface OnItemClickListener {
         void onClick(long filmId);
     }
 }

@@ -27,6 +27,15 @@ import io.realm.internal.Util;
 
 public class SearchActivity extends AppCompatActivity {
 
+    public static final String METHOD = "METHOD";
+    public static final String QUERY = "QUERY";
+
+    private static final String ALL_FILMS = "ALL_FILMS";
+    private static final String SEARCH_BY_NAME = "SEARCH_BY_NAME";
+    private static final String SEARCH_BY_DIRECTOR = "SEARCH_BY_DIRECTOR";
+    private static final String SEARCH_BY_YEARS = "SEARCH_BY_YEARS";
+    private static final String SEARCH_TOP_FILMS = "SEARCH_TOP_FILMS";
+
     @BindView(R.id.et_search_by_name)
     EditText etSearchByName;
     @BindView(R.id.btn_search_by_name)
@@ -46,50 +55,62 @@ public class SearchActivity extends AppCompatActivity {
     @BindView(R.id.btn_search_top_films)
     Button btnSearchTopFilms;
 
-    FilmRealmRepository mRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_search);
         ButterKnife.bind(this);
-        mRepository = new FilmRealmRepository();
     }
 
     @OnClick({R.id.btn_search_by_name, R.id.btn_search_by_year, R.id.btn_search_by_director, R.id.btn_search_top_films})
     public void onViewClicked(View view) {
         List<Long> longs = new ArrayList<>();
         List<Film> search = new ArrayList<>();
+        Intent intent = new Intent(this, FilmsActivity.class);
+        Bundle bundle = new Bundle();
         switch (view.getId()) {
             case R.id.btn_search_by_name:
                 if (Utils.isCheckedFields(etSearchByName)) {
-                    search = mRepository.search(etSearchByName.getText().toString());
+                    bundle.putString(METHOD, SEARCH_BY_NAME);
+                    bundle.putString(QUERY, etSearchByName.getText().toString());
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                } else Toast.makeText(this, "Input error", Toast.LENGTH_SHORT).show();
 
-                }
                 break;
             case R.id.btn_search_by_year:
                 if (Utils.isCheckedFields(etSearchByYearStartYear) && Utils.isCheckedFields(etSearchByYearEndYear)) {
-                    search = mRepository.searchInBounds(
-                            Integer.parseInt(etSearchByYearStartYear.getText().toString()),
-                            Integer.parseInt(etSearchByYearEndYear.getText().toString()));
-                }
+                    String query = etSearchByYearStartYear.getText().toString()
+                            + "/"
+                            + etSearchByYearEndYear.getText().toString();
+                    bundle.putString(METHOD, SEARCH_BY_YEARS);
+                    bundle.putString(QUERY, query);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                } else Toast.makeText(this, "Input error", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.btn_search_by_director:
-                if(Utils.isCheckedFields(etSearchByDirector)){
-                    search = mRepository.searchByDirector(etSearchByDirector.getText().toString());
-                }
+                if (Utils.isCheckedFields(etSearchByDirector)) {
+                    bundle.putString(METHOD, SEARCH_BY_DIRECTOR);
+                    bundle.putString(QUERY, etSearchByDirector.getText().toString());
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                } else Toast.makeText(this, "Input error", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.btn_search_top_films:
-                if(Utils.isCheckedFields(etSearchTopFilms)){
-                    search = mRepository.getTopFilms(Integer.parseInt(etSearchTopFilms.getText().toString()));
-                }
+                if (Utils.isCheckedFields(etSearchTopFilms)) {
+                    bundle.putString(METHOD, SEARCH_TOP_FILMS);
+                    bundle.putString(QUERY, etSearchTopFilms.getText().toString());
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                } else Toast.makeText(this, "Input error", Toast.LENGTH_SHORT).show();
                 break;
         }
+
+
         Log.d("DEBUG", "onViewClicked: " + search.size());
-        for (Film f : search)
-            longs.add(f.getId());
-        Intent intent = new Intent(this, FilmsActivity.class);
-        intent.putExtra(FilmsActivity.IDS, (Serializable) longs);
-        startActivity(intent);
+
+
     }
 }

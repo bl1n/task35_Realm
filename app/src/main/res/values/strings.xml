@@ -18,4 +18,5 @@
     <string name="search_by_director">Search by director</string>
     <string name="top_films">Top films</string>
     <string name="count">Count</string>
+    <string name="list_is_empty">List is empty</string>
 </resources>

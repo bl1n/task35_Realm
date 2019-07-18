@@ -4,16 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.lft.task35.common.SingleFragmentActivity;
-import com.lft.task35.ui.update_film.UpdateFilmActivity;
+import com.lft.task35.ui.update_film.UpdateDeleteFilmActivity;
 
 public class FilmsActivity extends SingleFragmentActivity implements FilmsFragment.OnItemClickListener {
 
 
     public static final String FILM_ID = "FILM_ID";
-    public static final String IDS = "IDS";
 
     @Override
     protected Fragment getFragment() {
@@ -23,7 +21,7 @@ public class FilmsActivity extends SingleFragmentActivity implements FilmsFragme
 
     @Override
     public void onClick(long filmId) {
-        Intent intent = new Intent(this, UpdateFilmActivity.class);
+        Intent intent = new Intent(this, UpdateDeleteFilmActivity.class);
         intent.putExtra(FILM_ID, filmId);
         startActivity(intent);
         Log.d("Debug", "onClick: " + filmId);

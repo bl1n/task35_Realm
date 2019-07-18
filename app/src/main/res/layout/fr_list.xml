@@ -6,7 +6,12 @@
     android:orientation="vertical"
     android:padding="8dp">
 
-
+    <TextView
+        android:id="@+id/tv_mock"
+        android:text="@string/list_is_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
 
 
     <android.support.v7.widget.RecyclerView
@@ -16,6 +21,8 @@
         android:layout_marginTop="8dp"
         tools:listitem="@layout/li_film"
         android:textAlignment="textStart"/>
+
+
 
 
 
