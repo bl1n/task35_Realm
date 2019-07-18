@@ -82,6 +82,7 @@ public class FilmsFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mAdapter = new FilmsAdapter(mListener);
+        getActivity().setTitle("Choose film for update");
         String method, query;
         if (getArguments() != null) {
             final Bundle bundle = getArguments();
@@ -94,10 +95,10 @@ public class FilmsFragment extends Fragment {
 
 
         mViewModel.getData(method,query).observe(this, films -> {
-//            if (films != null && films.size() == 0) {
-//                initEmptyUi();
-//                Log.d("Debug", "onActivityCreated: null list ");
-//            }
+            if (films != null && films.size() == 0) {
+                initEmptyUi();
+                Log.d("Debug", "onActivityCreated: null list ");
+            }
 
             mAdapter.addData(films);
         });

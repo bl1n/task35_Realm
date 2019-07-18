@@ -30,7 +30,6 @@ public class SearchActivity extends AppCompatActivity {
     public static final String METHOD = "METHOD";
     public static final String QUERY = "QUERY";
 
-    private static final String ALL_FILMS = "ALL_FILMS";
     private static final String SEARCH_BY_NAME = "SEARCH_BY_NAME";
     private static final String SEARCH_BY_DIRECTOR = "SEARCH_BY_DIRECTOR";
     private static final String SEARCH_BY_YEARS = "SEARCH_BY_YEARS";
